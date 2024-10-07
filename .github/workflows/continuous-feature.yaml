@@ -21,8 +21,10 @@ jobs:
       - name: Git Checkout
         uses: actions/checkout@v4
       - name: Create Pull Request
-        uses: rodrigoarias/auto-pullrequest@v1.0.0
+        uses: quangvo09/pull-request-action@v1
         with:
-            base-branch: develop
-            title: My pull request
-            body: "**Automated pull request**"
+            branch_prefix: feature
+            base_branch: develop
+            labels: feature,develop
+            assignees: quangvo09
+            reviewers: quangvo09
