@@ -27,7 +27,7 @@ jobs:
 
       - name: Create Pull Request
         if: success()  # Executa apenas se os testes forem bem-sucedidos
-        uses: peter-evans/create-pull-request@v3
+        uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}  # Ou use MY_PAT se preferir
           title: 'Merge feature branch into develop'
