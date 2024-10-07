@@ -23,6 +23,7 @@ jobs:
       - name: Create Pull Request
         uses: quangvo09/pull-request-action@v1
         with:
+            github_token: ${{ secrets.TOKEN }}
             branch_prefix: feature
             base_branch: develop
             labels: feature,develop
