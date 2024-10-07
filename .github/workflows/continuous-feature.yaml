@@ -17,7 +17,7 @@ jobs:
         run: mvn test
       - name: Create Pull Request
         if: success()  # Executa apenas se os testes forem bem-sucedidos
-        uses: peter-evans/create-pull-request@v3
+        uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}  # Token padrão do GitHub para ações
           title: 'Merge feature branch into develop'
