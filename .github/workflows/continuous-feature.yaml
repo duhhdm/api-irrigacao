@@ -15,17 +15,12 @@ jobs:
           java-version: '21'
       - name: Unit tests
         run: mvn test
-  pull-request:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Git Checkout
-        uses: actions/checkout@v4
       - name: Create Pull Request
-        uses: quangvo09/pull-request-action@v1
+        if: success()  # Executa apenas se os testes forem bem-sucedidos
+        uses: peter-evans/create-pull-request@v3
         with:
-            github_token: ${{ secrets.TOKEN }}
-            branch_prefix: feature
-            base_branch: develop
-            labels: feature,develop
-            assignees: quangvo09
-            reviewers: quangvo09
+          token: ${{ secrets.TOKEN }}  # Token padrão do GitHub para ações
+          title: 'Merge feature branch into develop'
+          body: 'This PR is automatically created from the feature branch.'
+          base: 'develop'  # Branch para onde o PR será direcionado
+          head: ${{ github.ref }}  # A branch de origem do PR
