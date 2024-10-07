@@ -29,7 +29,7 @@ jobs:
         if: success()  # Executa apenas se os testes forem bem-sucedidos
         uses: rodrigoarias/auto-pullrequest@v1.0.0
         with:
-          git-token: ${{ secrets.GITHUB_TOKEN }}
+          git-token: ${{ secrets.TOKEN }}
           base-branch: develop
           title: My pull request
           body: "**Automated pull request**"
