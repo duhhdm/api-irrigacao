@@ -14,7 +14,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 0  # Faz o fetch completo
 
       - name: Setup Java SDK
         uses: actions/setup-java@v4
@@ -26,11 +26,11 @@ jobs:
         run: mvn test
 
       - name: Create Pull Request
-        if: success()
+        if: success()  # Executa apenas se os testes forem bem-sucedidos
         uses: peter-evans/create-pull-request@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}  # Ou use MY_PAT se preferir
           title: 'Merge feature branch into develop'
           body: 'This PR is automatically created from the feature branch.'
-          base: 'develop'
-          head: ${{ github.ref }}  # A branch de origem do PR
+          base: 'develop'  # Branch para onde o PR será direcionado
+          head: ${{ github.ref_name }}  # A branch de origem do PR (nome da branch atual)
