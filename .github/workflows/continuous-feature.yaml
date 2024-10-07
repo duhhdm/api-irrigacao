@@ -1,5 +1,8 @@
 name: Test Feature and Create PR
 
+permissions:
+  contents: write
+
 on:
   push:
     branches: "feature/*"
@@ -11,7 +14,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Faz o fetch completo para garantir que todas as referências estão disponíveis
+          fetch-depth: 0
 
       - name: Setup Java SDK
         uses: actions/setup-java@v4
@@ -22,18 +25,12 @@ jobs:
       - name: Run Unit Tests
         run: mvn test
 
-      - name: Create Temporary Branch
-        if: success()
-        run: |
-          git checkout -b temp-branch-${{ github.run_id }}
-          git push origin temp-branch-${{ github.run_id }}
-
       - name: Create Pull Request
         if: success()
         uses: peter-evans/create-pull-request@v3
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}  # Ou use MY_PAT se preferir
           title: 'Merge feature branch into develop'
           body: 'This PR is automatically created from the feature branch.'
           base: 'develop'
-          head: 'temp-branch-${{ github.run_id }}'  # Usando a branch temporária
+          head: ${{ github.ref }}  # A branch de origem do PR
