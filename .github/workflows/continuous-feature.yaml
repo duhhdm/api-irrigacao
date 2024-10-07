@@ -27,10 +27,23 @@ jobs:
 
       - name: Create Pull Request
         if: success()  # Executa apenas se os testes forem bem-sucedidos
-        uses: peter-evans/create-pull-request@v6
+        uses: actions/github-script@v6
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}  # Ou use MY_PAT se preferir
-          title: 'Merge feature branch into develop'
-          body: 'This PR is automatically created from the feature branch.'
-          base: 'develop'  # Branch para onde o PR será direcionado
-          head: ${{ github.ref_name }}  # A branch de origem do PR (nome da branch atual)
+          script: |
+            const { exec } = require('@actions/exec');
+
+            const title = 'Merge feature branch into develop';
+            const body = 'This PR is automatically created from the feature branch.';
+            const base = 'develop';
+            const head = '${{ github.ref_name }}';  // A branch de origem do PR
+
+            const response = await github.pulls.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title,
+              body,
+              head,
+              base,
+            });
+
+            console.log(`Created PR: ${response.data.html_url}`);
