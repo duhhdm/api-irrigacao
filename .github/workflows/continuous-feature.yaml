@@ -19,7 +19,7 @@ jobs:
         if: success()  # Executa apenas se os testes forem bem-sucedidos
         uses: peter-evans/create-pull-request@v3
         with:
-          token: ${{ secrets.TOKEN }}  # Token padrão do GitHub para ações
+          token: ${{ secrets.GITHUB_TOKEN }}  # Token padrão do GitHub para ações
           title: 'Merge feature branch into develop'
           body: 'This PR is automatically created from the feature branch.'
           base: 'develop'  # Branch para onde o PR será direcionado
