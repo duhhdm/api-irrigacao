@@ -3,7 +3,7 @@ on:
   push:
     branches: "feature/*"
 jobs:
-  tests:
+  test-qualidade:
     runs-on: ubuntu-latest
     steps:
       - name: Github Checkout
