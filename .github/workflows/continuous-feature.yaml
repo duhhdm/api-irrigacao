@@ -27,21 +27,9 @@ jobs:
 
       - name: Create Pull Request
         if: success()  # Executa apenas se os testes forem bem-sucedidos
-        uses: actions/github-script@v6
+        uses: rodrigoarias/auto-pullrequest@v1.0.0
         with:
-          script: |
-            const title = 'Merge feature branch into develop';
-            const body = 'This PR is automatically created from the feature branch.';
-            const base = 'develop';
-            const head = '${{ github.ref_name }}';  // A branch de origem do PR
-
-            const response = await github.pulls.create({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              title,
-              body,
-              head,
-              base,
-            });
-
-            console.log(`Created PR: ${response.data.html_url}`);
+          git-token: ${{ secrets.GITHUB_TOKEN }}
+          base-branch: develop
+          title: My pull request
+          body: "**Automated pull request**"
