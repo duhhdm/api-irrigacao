@@ -23,4 +23,4 @@ jobs:
           title: 'Merge feature branch into develop'
           body: 'This PR is automatically created from the feature branch.'
           base: 'develop'  # Branch para onde o PR será direcionado
-          head: ${{ github.ref }}  # A branch de origem do PR
+          head: ${{ github.ref_name }}  # A branch de origem do PR
