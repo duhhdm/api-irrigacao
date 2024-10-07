@@ -1,26 +1,39 @@
-name: test feature
+name: Test Feature and Create PR
+
 on:
   push:
     branches: "feature/*"
+
 jobs:
   test-qualidade:
     runs-on: ubuntu-latest
     steps:
-      - name: Github Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Faz o fetch completo para garantir que todas as referências estão disponíveis
+
       - name: Setup Java SDK
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '21'
-      - name: Unit tests
+
+      - name: Run Unit Tests
         run: mvn test
+
+      - name: Create Temporary Branch
+        if: success()
+        run: |
+          git checkout -b temp-branch-${{ github.run_id }}
+          git push origin temp-branch-${{ github.run_id }}
+
       - name: Create Pull Request
-        if: success()  # Executa apenas se os testes forem bem-sucedidos
-        uses: peter-evans/create-pull-request@v7
+        if: success()
+        uses: peter-evans/create-pull-request@v3
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}  # Token padrão do GitHub para ações
+          token: ${{ secrets.GITHUB_TOKEN }}
           title: 'Merge feature branch into develop'
           body: 'This PR is automatically created from the feature branch.'
-          base: 'develop'  # Branch para onde o PR será direcionado
-          head: ${{ github.ref_name }}  # A branch de origem do PR
+          base: 'develop'
+          head: 'temp-branch-${{ github.run_id }}'  # Usando a branch temporária
