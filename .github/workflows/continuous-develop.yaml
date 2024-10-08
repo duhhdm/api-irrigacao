@@ -6,7 +6,7 @@ permissions:
 on:
   pull_request_review:
     types: [ submitted ]  # Aciona quando uma revisão é submetida
-    branches: [ integration ]  # Apenas para PRs que visam a branch integration
+    branches: [ develop ]  # Apenas para PRs que visam a branch integration
 
 jobs:
   test-develop:
