@@ -1,0 +1,35 @@
+name: Test Feature and Create PR
+
+permissions:
+  contents: write
+
+on:
+  push:
+    branches: "feature/*"
+
+jobs:
+  test-qualidade:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Faz o fetch completo
+
+      - name: Setup Java SDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Run Unit Tests
+        run: mvn test
+
+      - name: Create Pull Request
+        if: success()  # Executa apenas se os testes forem bem-sucedidos
+        uses: rodrigoarias/auto-pullrequest@v1.0.0
+        with:
+          git-token: ${{ secrets.TOKEN }}
+          base-branch: develop
+          title: My pull request
+          body: "**Automated pull request**"
