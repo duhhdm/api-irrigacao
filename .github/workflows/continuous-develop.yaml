@@ -4,9 +4,9 @@ permissions:
   contents: write
 
 on:
-  pull_request_review:
-    types: [ submitted ]  # Aciona quando uma revisão é submetida
-    branches: [ develop ]  # Apenas para PRs que visam a branch integration
+  pull_request:
+    types: [ opened, reopened ]  # Aciona quando um PR é aberto ou reaberto
+    branches: [ integration ]  # Apenas para PRs que visam a branch integration
 
 jobs:
   test-develop:
@@ -39,6 +39,6 @@ jobs:
         uses: rodrigoarias/auto-pullrequest@v1.0.0
         with:
           git-token: ${{ secrets.TOKEN }}
-          base-branch: integration
+          base-branch: master
           title: My pull request
-          body: "**Automated pull request develop**"
+          body: "**Automated pull request**"
