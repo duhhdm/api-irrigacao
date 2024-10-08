@@ -5,7 +5,7 @@ permissions:
 
 on:
   pull_request:
-    types: [review_submitted]  # Aciona quando uma revisão é submetida
+    types: [opened, reopened]  # Aciona quando uma revisão é submetida
     branches: [develop]  # Apenas para PRs que visam a branch develop
 
 jobs:
