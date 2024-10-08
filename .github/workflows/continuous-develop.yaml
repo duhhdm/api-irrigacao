@@ -4,9 +4,9 @@ permissions:
   contents: write
 
 on:
-  pull_request:
-    types: [review_submitted]  # Aciona quando uma revisão é submetida
-    branches: [develop]  # Apenas para PRs que visam a branch develop
+  pull_request_review:
+    types: [ submitted ]  # Aciona quando uma revisão é submetida
+    branches: [ integration ]  # Apenas para PRs que visam a branch integration
 
 jobs:
   test-develop:
@@ -29,7 +29,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Adicione seu token do SonarCloud aos Secrets do GitHub
         run: |
           mvn sonar:sonar \
-            -Dsonar.projectKey=duhhdm-1_your-project-key \
+            -Dsonar.projectKey=duhhdm_api-irrigacao \
             -Dsonar.organization=duhhdm-1 \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.login=$SONAR_TOKEN
