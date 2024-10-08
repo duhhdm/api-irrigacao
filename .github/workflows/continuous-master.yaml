@@ -1,12 +1,14 @@
-name: Test develop
+name: Test master
 
 permissions:
   contents: write
 
 on:
+  push:
+    branches:
+      - master
   pull_request:
-    types: [opened, reopened]  # Aciona quando um PR é aberto ou reaberto
-    branches: [master]  # Apenas para PRs que visam a branch integration
+      types: [ opened, synchronize, reopened ]
 
 jobs:
   test-develop:
@@ -35,14 +37,23 @@ jobs:
             -Dsonar.login=$SONAR_TOKEN \
             -Dsonar.qualityGate.wait=true  # Espera o resultado do Quality Gate
 
-      - name: Check SonarCloud Quality Gate
+      - name: SonarQube Scan
+        uses: sonarsource/sonarqube-scan-action@master
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |
-          STATUS=$(curl -s -u $SONAR_TOKEN: \
-            "https://sonarcloud.io/api/qualitygates/project_status?projectKey=duhhdm_api-irrigacao" | jq -r '.projectStatus.status')
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
-          if [ "$STATUS" != "OK" ]; then
-            echo "SonarCloud Quality Gate failed with status: $STATUS"
-            exit 1  # Faz o workflow falhar
-          fi
+      # Check the Quality Gate status.
+      - name: SonarQube Quality Gate check
+        id: sonarqube-quality-gate-check
+        uses: sonarsource/sonarqube-quality-gate-action@master
+        # Force to fail step after specific time.
+        timeout-minutes: 5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }} #OPTIONAL
+
+      # Optionally you can use the output from the Quality Gate in another step.
+      # The possible outputs of the `quality-gate-status` variable are `PASSED`, `WARN` or `FAILED`.
+      - name: "Example show SonarQube Quality Gate Status value"
+        run: echo "The Quality Gate status is ${{ steps.sonarqube-quality-gate-check.outputs.quality-gate-status }}"
