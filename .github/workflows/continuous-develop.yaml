@@ -1,0 +1,44 @@
+name: Test develop
+
+permissions:
+  contents: write
+
+on:
+  pull_request:
+    types: [review_submitted]  # Aciona quando uma revisão é submetida
+    branches: [develop]  # Apenas para PRs que visam a branch develop
+
+jobs:
+  test-develop:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Run Tests
+        run: mvn test  # Altere conforme necessário para seu projeto
+
+      - name: SonarCloud Scan
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Adicione seu token do SonarCloud aos Secrets do GitHub
+        run: |
+          mvn sonar:sonar \
+            -Dsonar.projectKey=duhhdm-1_your-project-key \
+            -Dsonar.organization=duhhdm-1 \
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.login=$SONAR_TOKEN
+
+      - name: Create Pull Request
+        if: success()  # Executa apenas se os testes forem bem-sucedidos
+        uses: rodrigoarias/auto-pullrequest@v1.0.0
+        with:
+          git-token: ${{ secrets.TOKEN }}
+          base-branch: integration
+          title: My pull request
+          body: "**Automated pull request**"
