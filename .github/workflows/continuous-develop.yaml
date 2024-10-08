@@ -41,4 +41,4 @@ jobs:
           git-token: ${{ secrets.TOKEN }}
           base-branch: integration
           title: My pull request
-          body: "**Automated pull request**"
+          body: "**Automated pull request develop**"
