@@ -11,4 +11,5 @@ public record ListIrrigacaoExibicaoDTO(Integer id, Date dataAgendamento) {
                 irrigacao.getId(),
                 irrigacao.getDataAgendamento());
     }
+
 }
