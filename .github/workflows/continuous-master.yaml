@@ -1,4 +1,4 @@
-name: Test master
+name: Test develop
 
 permissions:
   contents: write
@@ -7,53 +7,41 @@ on:
   push:
     branches:
       - master
-  pull_request:
-      types: [ opened, synchronize, reopened ]
-      branches:
-        - master
+
+env:
+  IMAGE_NAME: simple-java
+  AZURE_WEBAPP_NAME: fiap-simple-java-api
 
 jobs:
-  test-develop:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Git Checkout
         uses: actions/checkout@v4
 
-      - name: Set up JDK 21
+      - name: Setup Java SDK
         uses: actions/setup-java@v4
         with:
-          java-version: '21'
           distribution: 'temurin'
-
-      - name: Run Tests
-        run: mvn test  # Altere conforme necessário para seu projeto
-
-      - name: SonarCloud Scan
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Adicione seu token do SonarCloud aos Secrets do GitHub
-        run: |
-          mvn sonar:sonar \
-            -Dsonar.projectKey=duhhdm_api-irrigacao \
-            -Dsonar.organization=duhhdm-1 \
-            -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.login=$SONAR_TOKEN \
-            -Dsonar.qualityGate.wait=true  # Espera o resultado do Quality Gate
-
-      - name: SonarQube Scan
-        uses: sonarsource/sonarqube-scan-action@master
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-
-      # Check the Quality Gate status.
-      - name: SonarQube Quality Gate check
-        id: sonarqube-quality-gate-check
-        uses: sonarsource/sonarqube-quality-gate-action@master
-        # Force to fail step after specific time.
-        timeout-minutes: 5
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      # Optionally you can use the output from the Quality Gate in another step.
-      # The possible outputs of the `quality-gate-status` variable are `PASSED`, `WARN` or `FAILED`.
-      - name: "Example show SonarQube Quality Gate Status value"
-        run: echo "The Quality Gate status is ${{ steps.sonarqube-quality-gate-check.outputs.quality-gate-status }}"
+          java-version: '21'
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:v1
+#  deploy:
+#    runs-on: ubuntu-latest
+#    needs: build
+#    steps:
+#      - name: Deploy to Azure Web App
+#        id: deploy-to-webapp
+#        uses: azure/webapps-deploy@v2
+#        with:
+#          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+#          publish-profile: ${{ secrets.AZURE_PROFILE }}
+#          images: 'index.docker.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:v1'
