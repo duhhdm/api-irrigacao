@@ -4,45 +4,44 @@ permissions:
   contents: write
 
 on:
-  pull_request:
-    types: [opened, reopened]  # Aciona quando um PR é aberto ou reaberto
-    branches: [master]  # Apenas para PRs que visam a branch integration
+  push:
+    branches:
+      - master
+
+env:
+  IMAGE_NAME: simple-java
+  AZURE_WEBAPP_NAME: fiap-simple-java-api
 
 jobs:
-  test-develop:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Git Checkout
         uses: actions/checkout@v4
 
-      - name: Set up JDK 21
+      - name: Setup Java SDK
         uses: actions/setup-java@v4
         with:
-          java-version: '21'
           distribution: 'temurin'
-
-      - name: Run Tests
-        run: mvn test  # Altere conforme necessário para seu projeto
-
-      - name: SonarCloud Scan
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Adicione seu token do SonarCloud aos Secrets do GitHub
-        run: |
-          mvn sonar:sonar \
-            -Dsonar.projectKey=duhhdm_api-irrigacao \
-            -Dsonar.organization=duhhdm-1 \
-            -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.login=$SONAR_TOKEN \
-            -Dsonar.qualityGate.wait=true  # Espera o resultado do Quality Gate
-
-      - name: Check SonarCloud Quality Gate
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |
-          STATUS=$(curl -s -u $SONAR_TOKEN: \
-            "https://sonarcloud.io/api/qualitygates/project_status?projectKey=duhhdm_api-irrigacao" | jq -r '.projectStatus.status')
-
-          if [ "$STATUS" != "OK" ]; then
-            echo "SonarCloud Quality Gate failed with status: $STATUS"
-            exit 1  # Faz o workflow falhar
-          fi
+          java-version: '21'
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:v1
+#  deploy:
+#    runs-on: ubuntu-latest
+#    needs: build
+#    steps:
+#      - name: Deploy to Azure Web App
+#        id: deploy-to-webapp
+#        uses: azure/webapps-deploy@v2
+#        with:
+#          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+#          publish-profile: ${{ secrets.AZURE_PROFILE }}
+#          images: 'index.docker.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:v1'
