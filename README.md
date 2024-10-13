@@ -1,7 +1,7 @@
 # api-irrigacao
 ![Java](https://img.shields.io/badge/Java-21-blue.svg)
 ![Maven](https://img.shields.io/badge/Maven-3.8.1-C71A36.svg)
-![SonarCloud](https://sonarcloud.io/api/project_badges/measure?project=duhhdm_api-irrigacao&metric=alert_status)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=duhhdm_api-irrigacao&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=duhhdm_api-irrigacao)
 
 ## Descrição
 

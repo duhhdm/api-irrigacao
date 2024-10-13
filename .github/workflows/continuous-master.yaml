@@ -1,4 +1,4 @@
-name: Test develop
+name: Deploy Production
 
 permissions:
   contents: write

@@ -1,4 +1,4 @@
-name: Test Feature and Create PR
+name: Test develop
 
 permissions:
   contents: write
