@@ -40,6 +40,8 @@ public class IrrigacaoService {
     }
 
     public List<ListIrrigacaoExibicaoDTO> lista() {
+        String password = "mysecretpassword";
+        System.out.println(password);
         return irrigacaoRepository.
                 findAll().
                 stream().
