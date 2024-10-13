@@ -9,7 +9,7 @@ on:
       - master
 
 env:
-  IMAGE_NAME: simple-java
+  IMAGE_NAME: api-irrigacao
   AZURE_WEBAPP_NAME: fiap-simple-java-api
 
 jobs:
