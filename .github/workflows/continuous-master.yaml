@@ -10,7 +10,7 @@ on:
 
 env:
   IMAGE_NAME: api-irrigacao
-  AZURE_WEBAPP_NAME: fiap-simple-java-api
+  AZURE_WEBAPP_NAME: api-integracao
 
 jobs:
   build:
