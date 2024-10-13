@@ -17,7 +17,6 @@ A aplicação é construída usando o framework Spring e utiliza o SonarCloud pa
 - [Testes](#testes)
 - [Qualidade de Código (SonarCloud)](#qualidade-de-código-sonarcloud)
 - [Build e Deploy](#build-e-deploy)
-- [Contribuições](#contribuições)
 
 ## Tecnologias
 
