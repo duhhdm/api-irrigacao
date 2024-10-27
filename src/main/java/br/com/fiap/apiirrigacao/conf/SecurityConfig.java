@@ -31,6 +31,10 @@ public class SecurityConfig {
                                 permitAll().
                                 requestMatchers(HttpMethod.POST,"/auth/register").
                                 permitAll().
+                                requestMatchers(HttpMethod.GET, "/swagger-ui/**")
+                                .permitAll().
+                                requestMatchers(HttpMethod.GET, "/v3/api-docs/**")
+                                .permitAll().
                                 requestMatchers(
                                         HttpMethod.GET,"/api/pracas").
                                 hasRole("ADMIN").
