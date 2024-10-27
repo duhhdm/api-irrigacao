@@ -59,7 +59,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: ${{ env.ACR_NAME }}/${{ env.IMAGE_NAME }}:v2
+          tags: ${{ env.ACR_NAME }}/${{ env.IMAGE_NAME }}:v3
 
   deploy:
     runs-on: ubuntu-latest
