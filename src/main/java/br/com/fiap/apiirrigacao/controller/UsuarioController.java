@@ -7,6 +7,7 @@ import br.com.fiap.apiirrigacao.model.UsuarioCadastroDTO;
 import br.com.fiap.apiirrigacao.model.UsuarioExibicaoDTO;
 import br.com.fiap.apiirrigacao.service.TokenService;
 import br.com.fiap.apiirrigacao.service.UsuarioService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +31,7 @@ public class UsuarioController {
 
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody LoginDTO loginDTO){
+    public ResponseEntity<TokenDTO> login(@RequestBody LoginDTO loginDTO){
         UsernamePasswordAuthenticationToken usernamePassword =
                 new UsernamePasswordAuthenticationToken(
                         loginDTO.email(),
@@ -42,10 +43,20 @@ public class UsuarioController {
     }
 
     @PostMapping("/register")
-    @ResponseStatus(HttpStatus.CREATED)
-    public UsuarioExibicaoDTO registrar(@RequestBody UsuarioCadastroDTO usuarioCadastroDTO){
+    public ResponseEntity<?> registrar(@RequestBody @Valid UsuarioCadastroDTO usuarioCadastroDTO) throws Exception {
+        System.out.println(usuarioCadastroDTO.nome());
         UsuarioExibicaoDTO usuario = null;
         usuario = usuarioService.cadastroUsuario(usuarioCadastroDTO);
-        return usuario;
+        System.out.println(usuario.nome());
+        if(usuario==null)
+            return ResponseEntity.badRequest().body("Usuario ja existe");
+        System.out.println(usuario.nome());
+        return ResponseEntity.status(201).body(usuario);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity deletaUsuario(@PathVariable String id){
+        usuarioService.deletaUsuario(id);
+        return ResponseEntity.ok().build();
     }
 }

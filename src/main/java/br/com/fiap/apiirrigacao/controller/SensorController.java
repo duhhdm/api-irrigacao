@@ -4,6 +4,8 @@ import br.com.fiap.apiirrigacao.model.ConfSensorDTO;
 import br.com.fiap.apiirrigacao.model.SensorCadastroDTO;
 import br.com.fiap.apiirrigacao.model.SensorExibicaoDTO;
 import br.com.fiap.apiirrigacao.service.SensorService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +29,7 @@ public class SensorController {
     }
 
     @GetMapping("/sensores/{id}")
+    @Operation(security = {@SecurityRequirement(name="Authorization")})
     public SensorExibicaoDTO consultaSensor(@PathVariable Integer id){
         return sensorService.consultaSensor(id);
     }
