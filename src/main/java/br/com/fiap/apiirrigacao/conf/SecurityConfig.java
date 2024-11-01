@@ -27,9 +27,7 @@ public class SecurityConfig {
                 sessionManagement(session -> session.sessionCreationPolicy(
                         SessionCreationPolicy.STATELESS)).
                 authorizeHttpRequests(authorize ->
-                        authorize.requestMatchers(HttpMethod.POST,"/auth/login").
-                                permitAll().
-                                requestMatchers(HttpMethod.POST,"/auth/register").
+                        authorize.requestMatchers("/auth/**").
                                 permitAll().
                                 requestMatchers(HttpMethod.GET, "/swagger-ui/**")
                                 .permitAll().
